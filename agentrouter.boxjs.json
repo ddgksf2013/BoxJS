@@ -1,0 +1,69 @@
+{
+  "id": "agentrouter.checkin.subscription",
+  "name": "AgentRouter 签到",
+  "author": "@ddgksf2013",
+  "repo": "https://github.com/ddgksf2013/Scripts",
+  "apps": [
+    {
+      "id": "agentrouter.checkin",
+      "name": "AgentRouter 自动签到",
+      "desc": "账号密码登录即签到，支持多账号并核验个人日志。",
+      "author": "@ddgksf2013",
+      "repo": "https://github.com/ddgksf2013/Scripts/blob/master/agentrouter_checkin.js",
+      "script": "https://github.com/ddgksf2013/Scripts/raw/master/agentrouter_checkin.js",
+      "keys": [],
+      "settings": [
+        {
+          "id": "AGENTROUTER_ACCOUNT",
+          "name": "单账号",
+          "val": "",
+          "type": "textarea",
+          "placeholder": "邮箱#密码",
+          "autoGrow": true,
+          "rows": 2,
+          "desc": "格式：邮箱#密码。多账号配置有效时忽略此项。内容含明文密码，请勿分享 BoxJS 备份。"
+        },
+        {
+          "id": "AGENTROUTER_ACCOUNTS",
+          "name": "多账号（JSON）",
+          "val": "[]",
+          "type": "textarea",
+          "placeholder": "[{\"name\":\"甲\",\"account\":\"a@example.com#密码\"}]",
+          "autoGrow": true,
+          "rows": 7,
+          "desc": "JSON 数组。兼容 account 字段及 email/password 分离字段；有有效账号时优先于单账号。"
+        },
+        {
+          "id": "AGENTROUTER_BASE_URL",
+          "name": "服务地址",
+          "val": "https://agentrouter.org",
+          "type": "text",
+          "placeholder": "https://agentrouter.org",
+          "desc": "一般无需修改；也可填写兼容站点地址，末尾斜杠会自动移除。"
+        },
+        {
+          "id": "AGENTROUTER_POLICY",
+          "name": "请求策略/节点",
+          "val": "",
+          "type": "text",
+          "placeholder": "留空则使用当前分流规则",
+          "desc": "QX/Surge 填策略名；Loon 可填节点、策略组或节点描述。"
+        },
+        {
+          "id": "AGENTROUTER_TIMEOUT",
+          "name": "请求超时（秒）",
+          "val": 20,
+          "type": "number",
+          "desc": "每个 HTTP 请求的等待上限，必须为正数。"
+        },
+        {
+          "id": "AGENTROUTER_VERIFY_LOG",
+          "name": "核验签到日志",
+          "val": true,
+          "type": "boolean",
+          "desc": "登录成功后读取个人日志，确认当天存在签到记录。"
+        }
+      ]
+    }
+  ]
+}
