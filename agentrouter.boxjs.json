@@ -1,8 +1,9 @@
 {
   "id": "agentrouter.checkin.subscription",
   "name": "AgentRouter 签到",
-  "author": "@ddgksf2013",
-  "repo": "https://github.com/ddgksf2013/Scripts",
+  "author": "ddgksf2013",
+  "icon": "https://avatars.githubusercontent.com/u/116851128",
+  "repo": "https://github.com/ddgksf2013",
   "apps": [
     {
       "id": "agentrouter.checkin",
