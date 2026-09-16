@@ -1,5 +1,8 @@
 /**
  * BoxJS：刷新 AI 模型列表
+ *
+ * 从 CAIXIN_AI_API_URL 推导 /models 地址，使用 BoxJS 中保存的 API Key
+ * 请求模型列表，并写入 @CAIXIN_AI_DISCOVERY.modelOptions。
  */
 
 'use strict';
@@ -83,6 +86,13 @@ function finish(message, error) {
     throw new Error('模型列表保存失败');
   }
 
-  finish(`已获取 ${ids.length} 个模型，请返回应用页手动选择。`, false);
-})().catch(error => finish(error && error.message ? error.message : String(error), true));
+  const currentModel = String(read('CAIXIN_AI_MODEL') || '').trim();
+  if (!ids.includes(currentModel)) {
+    const preferred = ids.find(id => id === 'deepseek-flash')
+      || ids.find(id => /deepseek/i.test(id))
+      || ids[0];
+    if (!write(preferred, 'CAIXIN_AI_MODEL')) throw new Error('默认模型保存失败');
+  }
 
+  finish(`已获取 ${ids.length} 个模型。请刷新或重新打开 BoxJS 页面后再展开“模型名称”，仅返回应用页不会刷新下拉数据。`, false);
+})().catch(error => finish(error && error.message ? error.message : String(error), true));

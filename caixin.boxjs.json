@@ -49,7 +49,7 @@
           "val": "deepseek-flash",
           "type": "modalSelects",
           "items": "@CAIXIN_AI_DISCOVERY.modelOptions",
-          "desc": "先运行上方“刷新 AI 模型列表”，再从接口返回的模型中手动选择。"
+          "desc": "先运行“刷新 AI 模型列表”，然后刷新或重新打开 BoxJS 页面，再从接口返回的模型中选择。"
         },
         {
           "id": "CAIXIN_AI_API_MODE",
