@@ -1,0 +1,90 @@
+{
+  "id": "caixin.daily.subscription",
+  "name": "财新每日任务",
+  "author": "ddgksf2013",
+  "icon": "https://avatars.githubusercontent.com/u/116851128",
+  "repo": "https://github.com/ddgksf2013",
+  "apps": [
+    {
+      "id": "caixin.daily",
+      "name": "财新每日任务",
+      "descs_html": [
+        "配置用于知识问答的 OpenAI 兼容 API。API Key 仅保存在代理工具的本地持久化存储中。",
+        "默认使用 DeepSeek 官方 API；也可改成其他 OpenAI 兼容服务。"
+      ],
+      "keys": [
+        "CAIXIN_AI_API_URL",
+        "CAIXIN_AI_API_KEY",
+        "CAIXIN_AI_MODEL",
+        "CAIXIN_AI_API_MODE",
+        "CAIXIN_AI_USER_AGENT",
+        "CAIXIN_AI_WEB_SEARCH",
+        "CAIXIN_AI_TIMEOUT",
+        "@CAIXIN_AI_DISCOVERY.modelOptions"
+      ],
+      "scripts": [
+        {
+          "name": "刷新 AI 模型列表",
+          "script": "(async()=>{const R=k=>typeof $prefs!=='undefined'?$prefs.valueForKey(k):typeof $persistentStore!=='undefined'?$persistentStore.read(k):'';const W=(v,k)=>typeof $prefs!=='undefined'?$prefs.setValueForKey(v,k):typeof $persistentStore!=='undefined'?$persistentStore.write(v,k):false;const Q=o=>typeof $task!=='undefined'?$task.fetch(o):new Promise((a,b)=>$httpClient.get(o,(e,r,d)=>e?b(e):a({...r,body:d})));const api=String(R('CAIXIN_AI_API_URL')||'').trim();if(!api)throw new Error('请先填写 API URL');const url=api.replace(/[?#].*$/,'').replace(/\\/+$/,'').replace(/\\/(?:responses|chat\\/completions)$/i,'')+'/models';const key=String(R('CAIXIN_AI_API_KEY')||'').trim();const ua=String(R('CAIXIN_AI_USER_AGENT')||'claude-cli/2.1.161 (external, cli)').trim();const headers={Accept:'application/json','User-Agent':ua};if(key)headers.Authorization='Bearer '+key;const r=await Q({url,method:'GET',headers});const status=Number(r.statusCode||r.status||0);let j;try{j=JSON.parse(String(r.body||''))}catch(_){throw new Error('模型接口未返回 JSON')}if(status>=400)throw new Error('模型接口 HTTP '+status);const list=Array.isArray(j.data)?j.data:Array.isArray(j.models)?j.models:Array.isArray(j)?j:[];const ids=[...new Set(list.map(x=>String(typeof x==='string'?x:(x&&x.id||x&&x.name||x&&x.model||'')).trim()).filter(Boolean))].sort();if(!ids.length)throw new Error('没有读取到模型');let old={};try{old=JSON.parse(R('CAIXIN_AI_DISCOVERY')||'{}')}catch(_){}old.modelOptions=ids.map(id=>({key:id,label:id}));old.modelsUrl=url;old.updatedAt=new Date().toISOString();if(!W(JSON.stringify(old),'CAIXIN_AI_DISCOVERY'))throw new Error('模型列表保存失败');console.log('已获取 '+ids.length+' 个模型，请返回应用页手动选择。')})().catch(e=>console.log('刷新失败：'+(e&&e.message||e))).finally(()=>$done());"
+        }
+      ],
+      "settings": [
+        {
+          "id": "CAIXIN_AI_API_URL",
+          "name": "API URL",
+          "val": "https://api.deepseek.com",
+          "type": "text",
+          "desc": "可填基础地址或完整请求地址。默认使用官方 DeepSeek：https://api.deepseek.com"
+        },
+        {
+          "id": "CAIXIN_AI_API_KEY",
+          "name": "API Key",
+          "val": "",
+          "type": "text",
+          "desc": "Bearer API Key；仅在本地 BoxJS 中填写，不要写入脚本或公开订阅。无鉴权的本地接口可留空。"
+        },
+        {
+          "id": "CAIXIN_AI_MODEL",
+          "name": "模型名称",
+          "val": "deepseek-flash",
+          "type": "modalSelects",
+          "items": "@CAIXIN_AI_DISCOVERY.modelOptions",
+          "desc": "先运行上方“刷新 AI 模型列表”，再从接口返回的模型中手动选择。"
+        },
+        {
+          "id": "CAIXIN_AI_API_MODE",
+          "name": "接口模式",
+          "val": "auto",
+          "type": "selects",
+          "items": [
+            { "key": "auto", "label": "自动识别" },
+            { "key": "responses", "label": "Responses API" },
+            { "key": "chat", "label": "Chat Completions" }
+          ],
+          "desc": "自动模式根据完整 URL 判断；只填写基础地址时默认使用 Chat Completions。"
+        },
+        {
+          "id": "CAIXIN_AI_USER_AGENT",
+          "name": "User-Agent",
+          "val": "claude-cli/2.1.161 (external, cli)",
+          "type": "text",
+          "desc": "AI 接口请求使用的 User-Agent；通常无需修改。"
+        },
+        {
+          "id": "CAIXIN_AI_WEB_SEARCH",
+          "name": "启用模型联网搜索",
+          "val": false,
+          "type": "boolean",
+          "desc": "仅建议用于支持 web_search 工具的 Responses API；兼容接口不支持时请关闭。"
+        },
+        {
+          "id": "CAIXIN_AI_TIMEOUT",
+          "name": "AI 请求超时（毫秒）",
+          "val": "30000",
+          "type": "text",
+          "desc": "允许范围 5000–120000，默认 30000。"
+        }
+      ]
+    }
+  ]
+}
