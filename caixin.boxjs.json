@@ -9,10 +9,12 @@
       "id": "caixin.daily",
       "name": "财新每日任务",
       "descs_html": [
+        "可在本页粘贴完整 Cookie，手动添加或更新另一个财新账号。Cookie 自身必须包含 appinfo。",
         "配置用于知识问答的 OpenAI 兼容 API。API Key 仅保存在代理工具的本地持久化存储中。",
         "默认使用 DeepSeek 官方 API；也可改成其他 OpenAI 兼容服务。"
       ],
       "keys": [
+        "CAIXIN_MANUAL_COOKIE",
         "CAIXIN_AI_API_URL",
         "CAIXIN_AI_API_KEY",
         "CAIXIN_AI_MODEL",
@@ -24,11 +26,23 @@
       ],
       "scripts": [
         {
+          "name": "添加或更新财新账号",
+          "script": "https://raw.githubusercontent.com/ddgksf2013/BoxJS/main/caixin_account.js"
+        },
+        {
           "name": "刷新 AI 模型列表",
           "script": "https://raw.githubusercontent.com/ddgksf2013/BoxJS/main/caixin_models.js"
         }
       ],
       "settings": [
+        {
+          "id": "CAIXIN_MANUAL_COOKIE",
+          "name": "手动导入 Cookie",
+          "val": "",
+          "type": "textarea",
+          "rows": 5,
+          "desc": "粘贴另一个账号的完整 Cookie，再运行“添加或更新财新账号”。必须包含 SA_USER_UID（或 UID）和非空 appinfo；成功后会自动清空。"
+        },
         {
           "id": "CAIXIN_AI_API_URL",
           "name": "API URL",
